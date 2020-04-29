@@ -25,7 +25,7 @@
 
 /*jslint es6 browser devel:true*/
 /*global solace*/
-let table, subscriber;
+let table, subscriber, subNotice;
 window.onload = function () {
 	// Initialize factory with the most recent API defaults
 	var factoryProps = new solace.SolclientFactoryProperties();
@@ -39,6 +39,7 @@ window.onload = function () {
 	// create the subscriber, specifying name of the subscription topic
 	var topic_name = "t2/match/InProgress/*/wagering/*/*";
 	subscriber = new TopicSubscriber(topic_name);
+	subNotice = new TopicSubscriber("notice");
 	var topic_name_txt = document.getElementById("topic_name");
 	topic_name_txt.innerHTML = topic_name;
 	// assign buttons to the subscriber functions
@@ -66,6 +67,10 @@ window.onload = function () {
 	setTimeout(() => {
 		subscriber.subscribe();
 	}, 500);
+	subNotice.connect();
+	setTimeout(() => {
+		subNotice.subscribe();
+	}, 1000);
 };
 
 function iframeloaded() {
@@ -94,6 +99,9 @@ var TopicSubscriber = function (topicName) {
 	// 	}
 	// };
 	// push odd
+	subscriber.tableClear = function () {
+		table.clear().draw();
+	};
 
 	subscriber.push_odd = function (match) {
 		let {
@@ -129,7 +137,7 @@ var TopicSubscriber = function (topicName) {
 			if (existing_res.length) {
 				// console.log([existing_res[0].matchID, existing_res[0].poolcode, existing_res[0].poolID, existing_res[0].matchStatus], " => ", [matchID.toString(), x.poolcode, x.poolID, matchStatus])
 				table
-					.row(datas.length - 1 - existing_res[0].index)
+					.row(existing_res[0].index)
 					.data([
 						matchID,
 						homeTeam,
@@ -293,8 +301,13 @@ var TopicSubscriber = function (topicName) {
 					message.dump()
 			);
 			var msg = JSON.parse(message.getBinaryAttachment());
-			console.log(msg.matchStatus, "@@@@@@@@@@@");
-			subscriber.push_odd(msg);
+			// console.log(msg.matchStatus, "@@@@@@@@@@@");
+			// subscriber.push_odd(msg);
+			if (msg.clear) {
+				subscriber.tableClear();
+			} else {
+				subscriber.push_odd(msg);
+			}
 			// if (msg.results){
 			//     console.log(msg.results)
 			//     subscriber.result(msg.results)

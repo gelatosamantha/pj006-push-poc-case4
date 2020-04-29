@@ -28,12 +28,13 @@
 let table, subscriber, client;
 let topic_name = "t2/match/+/+/wagering/HAD/#";
 let topic_name2 = "t2/match/+/+/wagering/HIL/#";
+
 window.onload = function () {
 	// var topic_name = "t2/match";
 	client = new Paho.MQTT.Client(
 		"mr22gx8ufrq5gb.messaging.solace.cloud",
 		20073,
-		"msgvpn-22gx8ufrtvhl"
+		"msgvpn-22gx8ufrtvhl2"
 	);
 	client.onConnectionLost = onConnectionLost;
 	client.onMessageArrived = onMessageArrived;
@@ -77,6 +78,10 @@ function onConnect() {
 		onSuccess: successSub2,
 		onFailure: failSub,
 	});
+	client.subscribe("notice", {
+		onSuccess: successNoti,
+		onFailure: failSub,
+	});
 }
 function onConnectionLost(responseObject) {
 	if (responseObject.errorCode !== 0)
@@ -85,7 +90,11 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
 	showlog("onMessageArrived:" + message.payloadString);
 	var temp = JSON.parse(message.payloadString);
-	push_odd(temp);
+	if (temp.clear) {
+		table.clear().draw();
+	} else {
+		push_odd(temp);
+	}
 }
 function successSub(responseObject) {
 	showlog("Successfully subscribe to the topic " + topic_name);
@@ -93,6 +102,10 @@ function successSub(responseObject) {
 }
 function successSub2(responseObject) {
 	showlog("Successfully subscribe to the topic " + topic_name2);
+	console.log(responseObject);
+}
+function successNoti(responseObject) {
+	showlog("Successfully subscribe to the topic notice");
 	console.log(responseObject);
 }
 function failSub(responseObject) {
@@ -131,7 +144,7 @@ function push_odd(match) {
 		if (existing_res.length) {
 			// console.log([existing_res[0].matchID, existing_res[0].poolcode, existing_res[0].poolID, existing_res[0].matchStatus], " => ", [matchID.toString(), x.poolcode, x.poolID, matchStatus])
 			table
-				.row(datas.length - 1 - existing_res[0].index)
+				.row(existing_res[0].index)
 				.data([
 					matchID,
 					homeTeam,

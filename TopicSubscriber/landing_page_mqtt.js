@@ -32,7 +32,7 @@ window.onload = function () {
 	client = new Paho.MQTT.Client(
 		"mr22gx8ufrq5gb.messaging.solace.cloud",
 		20073,
-		"msgvpn-22gx8ufrtvhl"
+		"msgvpn-22gx8ufrtvhl1"
 	);
 	client.onConnectionLost = onConnectionLost;
 	client.onMessageArrived = onMessageArrived;
@@ -72,6 +72,10 @@ function onConnect() {
 		onSuccess: successSub,
 		onFailure: failSub,
 	});
+	client.subscribe("notice", {
+		onSuccess: successNoti,
+		onFailure: failSub,
+	});
 }
 function onConnectionLost(responseObject) {
 	if (responseObject.errorCode !== 0)
@@ -80,10 +84,18 @@ function onConnectionLost(responseObject) {
 function onMessageArrived(message) {
 	showlog("onMessageArrived:" + message.payloadString);
 	var temp = JSON.parse(message.payloadString);
-	push_odd(temp);
+	if (temp.clear) {
+		table.clear().draw();
+	} else {
+		push_odd(temp);
+	}
 }
 function successSub(responseObject) {
 	showlog("Successfully subscribe to the topic " + topic_name);
+	console.log(responseObject);
+}
+function successNoti(responseObject) {
+	showlog("Successfully subscribe to the topic notice");
 	console.log(responseObject);
 }
 function failSub(responseObject) {
@@ -101,6 +113,7 @@ function push_odd(match) {
 		.rows()
 		.data()
 		.map((y, index) => {
+			// console.log(y, "$$$$$");
 			return {
 				index,
 				matchID: y[0],
@@ -117,12 +130,28 @@ function push_odd(match) {
 
 	pool.forEach((x) => {
 		let existing_res = datas.filter((y) => {
+			// console.log(y.matchID == matchID && y.poolcode == x.poolcode);
+			// console.log(y.matchID, matchID, y.poolcode, x.poolcode);
+			console.log(x.poolID);
+
 			return y.matchID == matchID && y.poolcode == x.poolcode;
 		});
 		if (existing_res.length) {
-			// console.log([existing_res[0].matchID, existing_res[0].poolcode, existing_res[0].poolID, existing_res[0].matchStatus], " => ", [matchID.toString(), x.poolcode, x.poolID, matchStatus])
+			console.log(
+				[
+					existing_res[0].matchID,
+					existing_res[0].poolcode,
+					existing_res[0].poolID,
+					existing_res[0].matchStatus,
+				],
+				" => ",
+				[matchID.toString(), x.poolcode, x.poolID, matchStatus],
+				table.rows().data().toArray(),
+				existing_res[0].index,
+				table.row(datas.length - 1 - existing_res[0].index).data()
+			);
 			table
-				.row(datas.length - 1 - existing_res[0].index)
+				.row(existing_res[0].index)
 				.data([
 					matchID,
 					homeTeam,
@@ -134,6 +163,16 @@ function push_odd(match) {
 				])
 				.draw(false);
 		} else {
+			// console.log(
+			// 	[
+			// 		existing_res[0].matchID,
+			// 		existing_res[0].poolcode,
+			// 		existing_res[0].poolID,
+			// 		existing_res[0].matchStatus,
+			// 	],
+			// 	" => ",
+			// 	[matchID.toString(), x.poolcode, x.poolID, matchStatus]
+			// );
 			table.row
 				.add([
 					matchID,
