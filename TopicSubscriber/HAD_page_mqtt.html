@@ -30,59 +30,19 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge;" />
 		<meta charset="utf-8"/>
 
-		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+		<script src="jquery-3.3.1.js"></script>
+		<script src="jquery.dataTables.min.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="./resources/css/pure.css"></link>
 		<link rel="stylesheet" type="text/css" href="./resources/css/samples.css"></link>
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"></link>
-
-		<!-- Load Solace Web Messaging API for JavaScript -->
-		<!-- <script src="./lib/solclient-debug.js"></script> -->
+		<link rel="stylesheet" type="text/css" href="jquery.dataTables.min.css"></link>
 		<!-- Load Paho MQTT for JavaScript -->	
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+		<script src="mqttws31.js" type="text/javascript"></script>
 		<!-- Load the PublishSubscribe Topic Subscriber tutorial -->
+		<script src="config.json.js"></script>
 		<script src="HAD_page_mqtt.js"></script>
 
 		<!-- Execute the PublishSubscribe Topic Subscriber tutorial -->
-		<script>
-			// var subscriber = null;
-			// window.onload = function () {
-			// 	// Initialize factory with the most recent API defaults
-			// 	var factoryProps = new solace.SolclientFactoryProperties();
-			// 	factoryProps.profile = solace.SolclientFactoryProfiles.version10;
-			// 	solace.SolclientFactory.init(factoryProps);
-
-			// 	// enable logging to JavaScript console at WARN level
-			// 	// NOTICE: works only with "solclientjs-debug.js"
-			// 	solace.SolclientFactory.setLogLevel(solace.LogLevel.WARN);
-
-			// 	// create the subscriber, specifying name of the subscription topic
-			// 	var topic_name = "t2/match/>"
-			// 	subscriber = new TopicSubscriber(topic_name);
-			// 	var topic_name_txt = document.getElementById('topic_name');
-			// 	topic_name_txt.innerHTML = topic_name;
-			// 	// assign buttons to the subscriber functions
-			// 	document.getElementById("connect").addEventListener("click", subscriber.connect);
-			// 	document.getElementById("disconnect").addEventListener("click", subscriber.disconnect);
-			// 	document.getElementById("subscribe").addEventListener("click", subscriber.subscribe);
-			// 	document.getElementById("unsubscribe").addEventListener("click", subscriber.unsubscribe);
-
-			// 	let t = $('#odd_table').DataTable({ select: true })
-			// 	// $('#odd_table').DataTable().on( 'select', function ( e, dt, type, indexes ) {
-			// 	// 	if ( type === 'row' ) {
-			// 	// 		var data = $('#odd_table').DataTable().rows( indexes ).data();
-			// 	// 		// do something with the ID of the selected items
-			// 	// 	}
-			// 	// })
-			// 	// console.log("hi")
-			// };
-			// function iframeloaded(){
-			// 	if (subscriber) {
-			// 		subscriber.connectToSolace();
-			// 	}
-			// };
-		</script>
 		<style>
 					.warning {
 							padding: 5px; 
@@ -112,9 +72,6 @@
 							<img src="./Logo/hkjclogo_e.png"/>
 							<img src="./Logo/Sonivy.png"/>
 							<img src="./Logo/Solace_Logo.png"/>
-						<!-- <a href="http://dev.solace.com/">
-							<img src="../../resources/images/solace-logo-white.png"/>
-						</a> -->
 					</span>
 				<div class="banner-heading" style="color: navy;">
 					HKJC Solace Web Messaging Demo - HAD page Client B (MQTT)
@@ -139,38 +96,6 @@
 						<!-- <th>Odds</th> -->
 					</tr>
 				</thead>
-				<!-- <tr>
-					<td>H</td>
-					<td>A</td>
-					<td>D</td>
-				</tr>
-				<tr>
-					<td id="match_id_r1"></td>
-					<td id="match_status_r1"></td>
-					<td id="pool_code_r1"></td>
-					<td id="pool_id_r1"></td>
-					<td id="odd_H_r1"></td>
-					<td id="odd_A_r1"></td>
-					<td id="odd_D_r1"></td>
-				</tr> -->
-				<!-- <tr>
-						<td ><img id="result-pic-0" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-1" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-2" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-3" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-4" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-5" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-						<td ><img id="result-pic-6" src="./marksix_ball/q.gif" width="50" height="80"/></td>
-				</tr>
-				<tr>
-						<td id="result-num-0"></td>
-						<td id="result-num-1"></td>
-						<td id="result-num-2"></td>
-						<td id="result-num-3"></td>
-						<td id="result-num-4"></td>
-						<td id="result-num-5"></td>
-						<td id="result-num-6"></td>
-					</tr> -->
 			</table>
 				<!--[if IE]>
 						<div class="ie9 warning" style="padding: 5px; border: 1px solid black; background-color: #ff8;">
@@ -184,43 +109,6 @@
 				</div>
 
 			<form class="pure-form pure-form-aligned">
-				<fieldset>
-
-					<!-- <div class="pure-control-group">
-						<label for="hosturl">Solace router host url</label>
-						<input id="hosturl" type="text" placeholder="<protocol://host[:port]>">
-					</div>
-
-					<div class="pure-control-group">
-						<label for="message-vpn">Message-vpn</label>
-						<input id="message-vpn" type="text" placeholder="Message VPN" value="default">
-					</div> -->
-
-					<!-- <div class="pure-control-group">
-						<label for="topic-name">Topic Name</label>
-						<input id="topic-name" type="text" placeholder="Topic Name" value="mark_six_result">
-					</div> -->
-
-					<!-- <div class="pure-control-group">
-						<label for="username">Username</label>
-						<input id="username" type="text" placeholder="Username">
-					</div>
-
-					<div class="pure-control-group">
-						<label for="password">Password</label>
-						<input id="password" type="password" placeholder="Password">
-					</div> -->
-
-				</fieldset>
-				<!-- <p>
-					<button type="button" class="pure-button pure-button-primary" id="connect">Connect</button>
-					<button type="button" class="pure-button button-error" id="disconnect">Disconnect</button>
-				</p>
-				<p>
-					<button type="button" class="pure-button pure-button-primary" id="subscribe">Subscribe</button>
-					<button type="button" class="pure-button button-error" id="unsubscribe">Unsubscribe</button>
-				</p> -->
-
 				<textarea id="log" rows="20" cols="90" autofocus></textarea>
 
 			</form>

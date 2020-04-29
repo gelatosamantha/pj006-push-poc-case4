@@ -61,7 +61,6 @@ window.onload = function () {
 	table = $("#odd_table").DataTable({ select: true });
 	table.on("click", "tr", function () {
 		var data = table.row(this).data();
-		console.log("You clicked on " + data[0] + "'s row");
 	});
 
 	// For Testing
@@ -74,23 +73,10 @@ window.onload = function () {
 		subscriber2.subscribe();
 	}, 1000);
 	subNotice.connect();
-	// setTimeout(() => {
-	// 	subNotice.connect();
-	// }, 5000);
 	setTimeout(() => {
 		subNotice.subscribe();
 	}, 1000);
 };
-
-// function conbut() {
-// 	subscriber.connect;
-// 	subscriber2.connect;
-// }
-
-// function subbut() {
-// 	subscriber.subscribe;
-// 	subscriber2.subscribe;
-// }
 
 function iframeloaded() {
 	if (subscriber) {
@@ -105,18 +91,6 @@ var TopicSubscriber = function (topicName) {
 	subscriber.topicName = topicName;
 	subscriber.subscribed = false;
 
-	// result
-	// subscriber.result = function (number_arr) {
-	// 	// alert(document.getElementById("test").innerHTML)
-	// 	console.log(number_arr);
-	// 	var i;
-	// 	for (i in number_arr) {
-	// 		var td_add = document.getElementById("result-num-" + i);
-	// 		td_add.innerHTML = number_arr[i];
-	// 		var td_pic = document.getElementById("result-pic-" + i);
-	// 		td_pic.src = `./marksix_ball/${number_arr[i]}.gif`;
-	// 	}
-	// };
 	// push odd
 	subscriber.tableClear = function () {
 		table.clear().draw();
@@ -146,14 +120,12 @@ var TopicSubscriber = function (topicName) {
 				};
 			})
 			.toArray();
-		// console.log(datas)
 
 		pool.forEach((x) => {
 			let existing_res = datas.filter((y) => {
 				return y.matchID == matchID && y.poolcode == x.poolcode;
 			});
 			if (existing_res.length) {
-				// console.log([existing_res[0].matchID, existing_res[0].poolcode, existing_res[0].poolID, existing_res[0].matchStatus], " => ", [matchID.toString(), x.poolcode, x.poolID, matchStatus])
 				table
 					.row(existing_res[0].index)
 					.data([
@@ -209,9 +181,7 @@ var TopicSubscriber = function (topicName) {
 			subscriber.log("Already connected and ready to subscribe.");
 			return;
 		}
-		// var hosturl = document.getElementById('hosturl').value;
-		var hosturl = "wss://mr22gx8ufrq5gb.messaging.solace.cloud:20068";
-		// var hosturl = 'http://mr22gx8ufrq5gb.messaging.solace.cloud:20074';
+		var hosturl = config.hosturl;
 		// check for valid protocols
 		if (
 			hosturl.lastIndexOf("ws://", 0) !== 0 &&
@@ -224,12 +194,9 @@ var TopicSubscriber = function (topicName) {
 			);
 			return;
 		}
-		// var username = document.getElementById('username').value;
-		// var pass = document.getElementById('password').value;
-		// var vpn = document.getElementById('message-vpn').value;
-		var username = "solace-cloud-client";
-		var pass = "2gm0hhma6e04asa27coorhsvp0";
-		var vpn = "msgvpn-22gx8ufrtvhl";
+		var username = config.username;
+		var pass = config.pass;
+		var vpn = config.vpn;
 		if (!hosturl || !username || !pass || !vpn) {
 			subscriber.log(
 				"Cannot connect: please specify all the Solace message router properties."
@@ -319,27 +286,11 @@ var TopicSubscriber = function (topicName) {
 					message.dump()
 			);
 			var msg = JSON.parse(message.getBinaryAttachment());
-			// console.log(msg.matchStatus, "@@@@@@@@@@@");
-			// subscriber.push_odd(msg);
 			if (msg.clear) {
 				subscriber.tableClear();
 			} else {
 				subscriber.push_odd(msg);
 			}
-			// if (msg.results){
-			//     console.log(msg.results)
-			//     subscriber.result(msg.results)
-			//     // var x ;
-			//     // for (x in msg.results){
-			//     //     console.log(x)
-			//     //     subscriber.result(msg.results[x])
-			//     //     // var td1 = document.getElementById(`result-num-${x}`);
-			//     //     // td1.innerHTML = msg.results[x]
-
-			//     //     // var text = document.createTextNode("some text");
-			//     //     // td1.appendChild(text);
-			//     // }
-			// }
 		});
 
 		subscriber.connectToSolace();

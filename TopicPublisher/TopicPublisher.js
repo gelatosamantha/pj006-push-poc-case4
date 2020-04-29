@@ -69,27 +69,10 @@ $(document).ready(() => {
 	// NOTICE: works only with "solclientjs-debug.js"
 	solace.SolclientFactory.setLogLevel(solace.LogLevel.WARN);
 
-	// publisher = new TopicPublisher(messagesA[0].topic); //######
-	// assign buttons to the publisher functions
-	// document.getElementById("connect").addEventListener("click", publisher.connect);
-	// document.getElementById("disconnect").addEventListener("click", publisher.disconnect);
-	// document
-	// .getElementById("publish_a")
-	// .addEventListener("click", this.start("publish_a"));
 	$("#publish_a").click(start);
 	$("#publish_b").click(start);
 	$("#publish_c").click(start);
 	$("#notify").click(sendNoti);
-	// .addEventListener("click", start(messagesA));
-
-	// document
-	// 	.getElementById("publish_b")
-	// 	.addEventListener("click", start(messagesB));
-	// document
-	// 	.getElementById("publish_c")
-	// 	.addEventListener("click", start(messagesC));
-
-	// publisher.connect();
 });
 
 function iframeloaded() {
@@ -107,22 +90,11 @@ function start(e) {
 	} else if (e.target.id == "publish_c") {
 		messages_arr = messagesC;
 	}
-	console.log("???", e.target.id);
 	let pub_promise_arr = [];
-	// console.log(messagesA[0].payload.matchID);
-	// publisher.publish(JSON.stringify(messagesA[0].payload));
 	messages_arr.forEach((x) => {
-		console.log("topic: ", x.topic);
-		console.log("message: ", x.payload);
 		pub_promise_arr.push(pubto(x.topic, x.payload));
-		// let publisher = new TopicPublisher(x.topic);
-		// setTimeout(() => {
-		// 	publisher.publish(x.payload);
-		// }, 1000);
 	});
-	Promise.all(pub_promise_arr).then((result) => {
-		console.log(result, "~!@#@!$");
-	});
+	Promise.all(pub_promise_arr);
 }
 function pubto(topic, msg) {
 	let publisher = new TopicPublisher(topic);
@@ -168,7 +140,7 @@ var TopicPublisher = function (topicName) {
 			publisher.log("Already connected and ready to publish messages.");
 			return;
 		}
-		var hosturl = "wss://mr22gx8ufrq5gb.messaging.solace.cloud:20068";
+		var hosturl = config.hosturl;
 		// check for valid protocols
 		if (
 			hosturl.lastIndexOf("ws://", 0) !== 0 &&
@@ -181,9 +153,9 @@ var TopicPublisher = function (topicName) {
 			);
 			return;
 		}
-		var username = "solace-cloud-client";
-		var pass = "2gm0hhma6e04asa27coorhsvp0";
-		var vpn = "msgvpn-22gx8ufrtvhl";
+		var username = config.username;
+		var pass = config.pass;
+		var vpn = config.vpn;
 		if (!hosturl || !username || !pass || !vpn) {
 			publisher.log(
 				"Cannot connect: please specify all the Solace message router properties."

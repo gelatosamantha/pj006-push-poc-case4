@@ -37,39 +37,15 @@
     <!-- Load Solace Web Messaging API for JavaScript -->
     <script src="./lib/solclient-debug.js"></script>
     <!-- <script type="text/javascript" src="A.json"></script> -->
-		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+		<script src="jquery-3.3.1.js"></script>
+
     <!-- Load the PublishSubscribe Topic Publisher tutorial -->
     <script src="TopicPublisher.js"></script>
     <script src="A.json.js"></script>
     <script src="B.json.js"></script>
     <script src="C.json.js"></script>
-    <!-- Execute the PublishSubscribe Topic Publisher tutorial -->
-    <script>
-      // var publisher = null;
-      // window.onload = function () {
-      //   // Initialize factory with the most recent API defaults
-      //   var factoryProps = new solace.SolclientFactoryProperties();
-      //   factoryProps.profile = solace.SolclientFactoryProfiles.version10;
-      //   solace.SolclientFactory.init(factoryProps);
+    <script src="config.json.js"></script>
 
-      //   // enable logging to JavaScript console at WARN level
-      //   // NOTICE: works only with "solclientjs-debug.js"
-      //   solace.SolclientFactory.setLogLevel(solace.LogLevel.WARN);
-
-      //   // create the publisher, specifying name of the subscription topic
-      //   publisher = new TopicPublisher('tutorial/topic');
-      //   // assign buttons to the publisher functions
-      //   document.getElementById("connect").addEventListener("click", publisher.connect);
-      //   document.getElementById("disconnect").addEventListener("click", publisher.disconnect);
-      //   document.getElementById("publish").addEventListener("click", publisher.publish);
-      // };
-      // function iframeloaded(){
-      //   if (publisher) {
-      //     publisher.connectToSolace();
-      //   }
-      // };
-    </script>
 	<style>
         .warning {
             padding: 5px; 
@@ -99,9 +75,7 @@
 							<img src="./Logo/hkjclogo_e.png"/>
 							<img src="./Logo/Sonivy.png"/>
 							<img src="./Logo/Solace_Logo.png"/>
-						<!-- <a href="http://dev.solace.com/">
-							<img src="../../resources/images/solace-logo-white.png"/>
-						</a> -->
+
 					</span>
 				<div class="banner-heading" style="color: navy;">
 					HKJC Solace Web Messaging Demo - Publisher
@@ -124,32 +98,7 @@
        </div>
 
       <form class="pure-form pure-form-aligned">
-        <!-- <fieldset>
-
-          <div class="pure-control-group">
-            <label for="hosturl">Solace router host url</label>
-            <input id="hosturl" type="text" placeholder="<protocol://host[:port]>">
-          </div>
-
-          <div class="pure-control-group">
-            <label for="message-vpn">Message-vpn</label>
-            <input id="message-vpn" type="text" placeholder="Message VPN" value="default">
-          </div>
-
-          <div class="pure-control-group">
-            <label for="username">Username</label>
-            <input id="username" type="text" placeholder="Username">
-          </div>
-
-          <div class="pure-control-group">
-            <label for="password">Password</label>
-            <input id="password" type="password" placeholder="Password">
-          </div>
-
-        </fieldset> -->
         <p>
-          <!-- <button type="button" class="pure-button pure-button-primary" id="connect">Connect</button> -->
-          <!-- <button type="button" class="pure-button button-error" id="disconnect">Disconnect</button> -->
           <button type="button" class="pure-button button-error" id="notify">Notify</button>
         </p>
         <p>
